@@ -3,7 +3,7 @@ import { IUser } from "../interfaces/IUser";
 import User from "../model/User";
 import { generatedSalt } from "../helpers/generateSalt";
 import { hashedPassword } from "../helpers/hashPassword";
-import jwt from "jsonwebtoken";
+import { generateToken } from "../helpers/jwtConfig";
 
 export const register = async (
   req: Request,
@@ -12,8 +12,16 @@ export const register = async (
 ) => {
   try {
     //   GET USER INPUT
-    const { first_name, last_name, username, birth, gender, email, password } =
-      req.body;
+    const {
+      first_name,
+      last_name,
+      username,
+      birth,
+      gender,
+      email,
+      password,
+      role,
+    } = req.body;
 
     //   verification of input data
     if (
@@ -23,6 +31,7 @@ export const register = async (
       !birth ||
       !gender ||
       !email ||
+      !role ||
       !password
     ) {
       return res.status(400).json({
@@ -44,6 +53,7 @@ export const register = async (
     const salt = generatedSalt();
     const hashPassword = hashedPassword(password, salt);
 
+    // console.log("hashPassword", hashPassword);
     // Create new user in database
     const newUser: IUser = new User({
       first_name,
@@ -52,21 +62,30 @@ export const register = async (
       birth,
       gender,
       email,
-      hashPassword,
+      password: hashPassword,
+      role,
     });
 
+    await newUser.save();
     // create token
-    // const token = jwt.sign({ user_id: newUser._id, email });
+    const payload = {
+      userId: newUser.id,
+      email: newUser.email,
+      username: newUser.username,
+      role: newUser.role,
+    };
+    const token = generateToken(payload);
 
-    // await newUser.save();
-    // console.log("newUser", newUser);
-    // return res.status(200).json({ newUser });
-
-    res.status(200).json({ message: "Hello register successfully" });
+    res.status(200).json({
+      success: true,
+      data: { userId: newUser.id, email: newUser.email, token: token },
+    });
+    return next();
   } catch (error) {
     console.log(" register failed. exiting now...");
     console.error(error);
     res.status(200).json({ message: "register failed. exiting now..." });
+    return next(error);
   }
 };
 
@@ -75,7 +94,9 @@ export const login = async (
   res: Response,
   next: NextFunction
 ) => {
+  const { email, password } = req.body;
   try {
+    const existing_user = await User.findOne({ email: email });
     console.log("Hello login ");
     res.status(200).json({ message: "Hello login successfully" });
   } catch (error) {

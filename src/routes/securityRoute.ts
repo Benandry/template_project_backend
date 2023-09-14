@@ -3,7 +3,7 @@ import { login, register } from "../controllers/securityController";
 
 const routerSecurity = express.Router();
 
-routerSecurity.get("/register", register);
+routerSecurity.post("/register", register);
 routerSecurity.get("/login", login);
 
 // Export router security
