@@ -50,7 +50,7 @@ export const updateUser = async (req: Request, res: Response) => {
     const user = await User.findById(_id).exec();
     if (user) {
       // Sets `name` and unsets all other properties
-      await User.replaceOne({ _id }, { username: "Jean-Luc Picard" });
+      // await User.replaceOne({ _id }, { username: "Jean-Luc Picard" });
       const user_to_update = await User.findById(_id).exec();
       return res.status(200).json({ data: user_to_update });
     } else {
