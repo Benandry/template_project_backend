@@ -1,30 +1,27 @@
 import express from "express";
 import {
-  createUser,
   deleteUser,
   findAll,
   findById,
   updateUser,
 } from "../controllers/userController";
+import { authenticateJWT } from "../middleware/jwt.middleware";
 
 const router = express.Router();
 
 /**Endpoints for user */
 
 // GET /users
-router.get("/", findAll);
+router.get("/", authenticateJWT, findAll);
 
 // GET /users
-router.get("/:id", findById);
-
-// POST /user
-router.post("/new", createUser);
+router.get("/:id", authenticateJWT, findById);
 
 // PATCH /users
-router.patch("/edit/:id", updateUser);
+router.patch("/edit/:id", authenticateJWT, updateUser);
 
 // DELETE /user
-router.delete("/delete/:id", deleteUser);
+router.delete("/delete/:id", authenticateJWT, deleteUser);
 
 /**Export router User */
 export default router;
