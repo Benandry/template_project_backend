@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const secretKey: String =
+const secretKey: string =
   process.env.JWT_SECRET_KEY ||
   "f5719d73283ebece37cd99b00f2f7ffdea762a80bfb700d7afdc2efb383abb18"; // Remplacez par une clé secrète réelle
 

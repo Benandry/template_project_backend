@@ -1,1 +1,6 @@
-# template_project_backend
+#
+
+##Lancer le projet
+
+    npm install --save
+    npm run dev
