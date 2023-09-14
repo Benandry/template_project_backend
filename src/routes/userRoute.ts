@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  createUser,
   deleteUser,
   findAll,
   findById,
@@ -16,9 +15,6 @@ router.get("/", findAll);
 
 // GET /users
 router.get("/:id", findById);
-
-// POST /user
-router.post("/new", createUser);
 
 // PATCH /users
 router.patch("/edit/:id", updateUser);

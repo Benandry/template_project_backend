@@ -8,5 +8,6 @@ export interface IUser extends Document {
   gender: string;
   email: string;
   password: string;
+  salt: string;
   role: string;
 }

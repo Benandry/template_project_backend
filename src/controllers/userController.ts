@@ -1,24 +1,5 @@
 import { Request, Response } from "express";
 
-import User from "../model/User";
-import { IUser } from "../interfaces/IUser";
-
-// /CREATE USER
-export const createUser = async (req: Request, res: Response) => {
-  try {
-    const { username, email } = req.body;
-
-    const newUser: IUser = new User({ username, email });
-
-    await newUser.save();
-    console.log("newUser", newUser);
-    return res.status(200).json({ newUser });
-  } catch (error) {
-    console.error("Erreur lors de la création du post:", error);
-    return res.status(500).json({ error });
-  }
-};
-
 // FIND ALL USER IN DATABASE
 export const findAll = async (req: Request, res: Response) => {
   try {

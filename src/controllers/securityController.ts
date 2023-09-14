@@ -63,22 +63,15 @@ export const register = async (
       gender,
       email,
       password: hashPassword,
+      salt,
       role,
     });
 
     await newUser.save();
-    // create token
-    const payload = {
-      userId: newUser.id,
-      email: newUser.email,
-      username: newUser.username,
-      role: newUser.role,
-    };
-    const token = generateToken(payload);
 
     res.status(200).json({
       success: true,
-      data: { userId: newUser.id, email: newUser.email, token: token },
+      data: { userId: newUser.id, email: newUser.email },
     });
     return next();
   } catch (error) {
@@ -97,11 +90,42 @@ export const login = async (
   const { email, password } = req.body;
   try {
     const existing_user = await User.findOne({ email: email });
-    console.log("Hello login ");
-    res.status(200).json({ message: "Hello login successfully" });
+
+    if (!existing_user) {
+      const error = { message: Error("Wrong details please check at once") };
+      console.log("error", error);
+      res.status(403).json({ error: error.message });
+      return next(error);
+    }
+
+    const salt = existing_user.salt;
+    const hashPasswordToCheck = hashedPassword(password, salt);
+
+    if (hashPasswordToCheck === existing_user.password) {
+      //Create payload object
+      const payload = {
+        userId: existing_user.id,
+        username: existing_user.username,
+        role: existing_user.role,
+      };
+      //Creating jwt token
+      const newToken = generateToken(payload);
+
+      res.status(200).json({
+        success: true,
+        data: {
+          userId: existing_user.id,
+          email: existing_user.email,
+          token: newToken,
+        },
+      });
+    } else {
+      res.status(401).send("Mot de passe incorrect.");
+    }
   } catch (error) {
     console.log(" connection failed. exiting now...");
     console.error(error);
     res.status(500).json({ message: "connection failed. exiting now..." });
+    return next(error);
   }
 };
