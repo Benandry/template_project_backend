@@ -70,7 +70,11 @@ export const register = async (
 
     res.status(200).json({
       success: true,
-      data: { userId: newUser.id, email: newUser.email },
+      data: {
+        userId: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+      },
     });
     return next();
   } catch (error) {
