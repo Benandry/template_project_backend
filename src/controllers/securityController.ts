@@ -22,6 +22,7 @@ export const register = async (
     role,
   } = req.body;
   //   verification of input data
+
   if (
     !first_name ||
     !last_name ||
@@ -50,6 +51,7 @@ export const register = async (
   const salt = generatedSalt();
   const hashPassword = hashedPassword(password, salt);
   // Create new user in database
+  console.log("hashPassword", hashPassword);
   const newUser: IUser = new User({
     first_name,
     last_name,
@@ -63,6 +65,7 @@ export const register = async (
   });
 
   try {
+    // console.log("first tsy valide");
     await newUser.save();
 
     res.status(200).json({
