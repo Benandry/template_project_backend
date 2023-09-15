@@ -9,7 +9,11 @@
 - typescript
 - MongoDB
 
+- Docker-compose
+
 ## Lancer le projet
 
+    mkdir backend/ && cd backend/
+    git clone https://github.com/Benandry/template_project_backend.git ./
     npm install --save
     npm run dev

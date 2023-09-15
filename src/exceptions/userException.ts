@@ -3,4 +3,8 @@ export class UserException extends Error {
     super(message);
     this.name = "CustomException";
   }
+
+  getMessage(): string {
+    return this.message;
+  }
 }
