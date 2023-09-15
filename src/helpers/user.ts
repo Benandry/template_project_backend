@@ -1,4 +1,5 @@
 import { IUser, IUserFormatted } from "../interfaces/IUser";
+import User from "../model/User";
 
 export const usersFormatted = (users: IUser[]): IUserFormatted[] => {
   const arrayUserFormatted: IUserFormatted[] = [];
@@ -32,4 +33,16 @@ export const userFormatted = (user: IUser): IUserFormatted => {
   };
 
   return userFormatted;
+};
+
+export const userBodyFormatted = (user: IUser) => {
+  return {
+    first_name: user.first_name,
+    last_name: user.last_name,
+    username: user.username,
+    birth: user.birth,
+    gender: user.gender,
+    email: user.email,
+    role: user.role,
+  };
 };

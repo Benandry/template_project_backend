@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../model/User";
-import { userFormatted, usersFormatted } from "../helpers/user";
+import {
+  userBodyFormatted,
+  userFormatted,
+  usersFormatted,
+} from "../helpers/user";
+import { IUser } from "../interfaces/IUser";
 // FIND ALL USER IN DATABASE
 export const findAll = async (
   req: Request,
@@ -31,7 +36,7 @@ export const findById = async (
       const user = userFormatted(data);
       // console.log("user", user);
       next();
-      return res.status(200).json({ data: user });
+      return res.status(200).json({ user });
     } else {
       return res
         .status(500)
@@ -47,16 +52,19 @@ export const findById = async (
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const _id = req.params.id;
-    const user = await User.findById(_id).exec();
-    if (user) {
-      // Sets `name` and unsets all other properties
-      // await User.replaceOne({ _id }, { username: "Jean-Luc Picard" });
-      const user_to_update = await User.findById(_id).exec();
-      return res.status(200).json({ data: user_to_update });
-    } else {
+    const user = userBodyFormatted(req.body);
+    console.log("user", user);
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      { ...user },
+      { new: true }
+    );
+    if (updatedUser) {
       return res
-        .status(500)
-        .json({ messages: "Aucun utilisateur trouvé avec cet ID." });
+        .status(200)
+        .json({ success: true, message: "user updated successfully" });
+    } else {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
   } catch (error) {
     console.error("Erreur lors de la modification  du user:", error);
@@ -66,10 +74,12 @@ export const updateUser = async (req: Request, res: Response) => {
 
 // DELETE  USER IN DATABASE
 export const deleteUser = async (req: Request, res: Response) => {
+  const id = req.params.id;
   try {
-    const id = req.params.id;
-    console.log("The id de user to delete ==> ", id);
-    res.send(`The id de user to delete  ${id}`);
+    await User.findByIdAndDelete(id);
+    return res
+      .status(500)
+      .json({ success: true, message: "User deleted successfully" });
   } catch (error) {
     console.error("Erreur lors de la supprission  du user:", error);
     return res.status(500).json({ error });

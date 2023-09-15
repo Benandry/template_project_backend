@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import connectDatabase from "./config/database";
 import userRoute from "./routes/userRoute";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import routerSecurity from "./routes/securityRoute";
 
@@ -10,8 +9,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const port: Number = parseInt(process.env.PORT as string, 10) || 8000;
-dotenv.config();
+dotenv.config({ path: "./.env" });
+const port: Number = parseInt(process.env.PORT as string, 10);
 
 const startServer = async () => {
   try {
