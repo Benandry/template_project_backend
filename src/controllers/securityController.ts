@@ -10,63 +10,59 @@ export const register = async (
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    //   GET USER INPUT
-    const {
-      first_name,
-      last_name,
-      username,
-      birth,
-      gender,
-      email,
-      password,
-      role,
-    } = req.body;
-
-    //   verification of input data
-    if (
-      !first_name ||
-      !last_name ||
-      !username ||
-      !birth ||
-      !gender ||
-      !email ||
-      !role ||
-      !password
-    ) {
-      return res.status(400).json({
-        status: 400,
-        message: "Bad Request",
-      });
-    }
-
-    //  Check if the user is already exist in database
-    const userExist = await User.findOne({ email });
-
-    if (userExist) {
-      return res.status(409).json({
-        status: 409,
-        message: "User already exist.Please login",
-      });
-    }
-    // Encrypt user password
-    const salt = generatedSalt();
-    const hashPassword = hashedPassword(password, salt);
-
-    // console.log("hashPassword", hashPassword);
-    // Create new user in database
-    const newUser: IUser = new User({
-      first_name,
-      last_name,
-      username,
-      birth,
-      gender,
-      email,
-      password: hashPassword,
-      salt,
-      role,
+  //   GET USER DATA INPUT
+  const {
+    first_name,
+    last_name,
+    username,
+    birth,
+    gender,
+    email,
+    password,
+    role,
+  } = req.body;
+  //   verification of input data
+  if (
+    !first_name ||
+    !last_name ||
+    !username ||
+    !birth ||
+    !gender ||
+    !email ||
+    !role ||
+    !password
+  ) {
+    return res.status(400).json({
+      status: 400,
+      message: "Bad Request",
     });
+  }
+  //  Check if the user is already exist in database
+  const userExist = await User.findOne({ email });
+  if (userExist) {
+    return res.status(409).json({
+      status: 409,
+      message: "User already exist.Please login",
+    });
+  }
 
+  // Encrypt user password
+  const salt = generatedSalt();
+  const hashPassword = hashedPassword(password, salt);
+  // Create new user in database
+  const newUser: IUser = new User({
+    first_name,
+    last_name,
+    username,
+    birth,
+    gender,
+    email,
+    password: hashPassword,
+    salt,
+    role,
+  });
+
+  try {
     await newUser.save();
 
     res.status(200).json({

@@ -1,19 +1,22 @@
 import mongoose, { ConnectOptions } from "mongoose";
 
 // # MongoDB connection via mongoosengo
-const server = "127.0.0.1:27017";
-const database = "my_db_express";
-
 const connectDatabase = async () => {
   try {
-    await mongoose.connect(`mongodb://${server}/${database}`, {
+    // Vérifier si DATABASE_URL est défini
+    if (!process.env.DATABASE_URL) {
+      console.error("The key DATABASE_URL  is not exist in  .env");
+      process.exit(1);
+    }
+
+    await mongoose.connect(process.env.DATABASE_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     } as ConnectOptions);
     console.log("Successfully connected to database");
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
-    throw error;
+    // throw error;
     process.exit(1);
   }
 };
