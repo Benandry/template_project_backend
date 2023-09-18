@@ -15,8 +15,9 @@ export const findAll = async (
   try {
     const data = await User.find();
     const users = usersFormatted(data);
+    console.log("users", users);
     next();
-    return res.status(200).json({ data: users });
+    return res.status(200).json(users);
   } catch (error) {
     console.error("Erreur lors de la création du post:", error);
     return res.status(500).json({ error });
@@ -34,9 +35,8 @@ export const findById = async (
     const data = await User.findById(_id).exec();
     if (data) {
       const user = userFormatted(data);
-      // console.log("user", user);
       next();
-      return res.status(200).json({ user });
+      return res.status(200).json({ ...user });
     } else {
       return res
         .status(500)
@@ -52,6 +52,8 @@ export const findById = async (
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const _id = req.params.id;
+
+    console.log("update _id", _id);
     const user = userBodyFormatted(req.body);
     console.log("user", user);
     const updatedUser = await User.findByIdAndUpdate(
