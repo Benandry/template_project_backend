@@ -80,7 +80,7 @@ export const deleteUser = async (req: Request, res: Response) => {
   try {
     await User.findByIdAndDelete(id);
     return res
-      .status(500)
+      .status(200)
       .json({ success: true, message: "User deleted successfully" });
   } catch (error) {
     console.error("Erreur lors de la supprission  du user:", error);
