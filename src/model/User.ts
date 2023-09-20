@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { IUser } from "../interfaces/IUser";
 
 const userSchema: Schema = new Schema({
+  imageUrl: { type: String, required: true },
   first_name: { type: String, required: true },
   last_name: { type: String, required: true },
   username: { type: String, required: true },

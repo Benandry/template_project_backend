@@ -13,6 +13,7 @@ export const usersFormatted = (users: IUser[]): IUserFormatted[] => {
       gender: element.gender,
       email: element.email,
       role: element.role,
+      imageUrl: element.imageUrl,
     };
     arrayUserFormatted.push(userFormatted);
   });
@@ -30,6 +31,7 @@ export const userFormatted = (user: IUser): IUserFormatted => {
     gender: user.gender,
     email: user.email,
     role: user.role,
+    imageUrl: user.imageUrl,
   };
 
   return userFormatted;

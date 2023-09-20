@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import multer from "multer";
 import { IUser } from "../interfaces/IUser";
 import User from "../model/User";
 import { generatedSalt } from "../helpers/generateSalt";
@@ -12,6 +13,7 @@ export const register = async (
 ) => {
   //   GET USER DATA INPUT
   const {
+    imageUrl,
     first_name,
     last_name,
     username,
@@ -22,8 +24,10 @@ export const register = async (
     role,
   } = req.body;
   //   verification of input data
+  console.log("req.body", req.body);
 
   if (
+    !imageUrl ||
     !first_name ||
     !last_name ||
     !username ||
@@ -35,7 +39,7 @@ export const register = async (
   ) {
     return res.status(400).json({
       status: 400,
-      message: "Bad Request",
+      message: "Bad Request data is not complet ",
     });
   }
   //  Check if the user is already exist in database
@@ -53,6 +57,7 @@ export const register = async (
   const hashPassword = hashedPassword(password, salt);
   // Create new user in database
   const newUser: IUser = new User({
+    imageUrl,
     first_name,
     last_name,
     username,

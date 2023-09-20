@@ -15,7 +15,6 @@ export const findAll = async (
   try {
     const data = await User.find();
     const users = usersFormatted(data);
-    console.log("users", users);
     next();
     return res.status(200).json(users);
   } catch (error) {
@@ -84,6 +83,28 @@ export const deleteUser = async (req: Request, res: Response) => {
       .json({ success: true, message: "User deleted successfully" });
   } catch (error) {
     console.error("Erreur lors de la supprission  du user:", error);
+    return res.status(500).json({ error });
+  }
+};
+
+// DELETE  USER IN DATABASE
+export const uploadsImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "Aucun fichier n'a été téléchargé." });
+  }
+
+  const imageName = req.file.path.split("\\")[2];
+
+  try {
+    // await User.findByIdAndDelete(id);
+
+    return res.status(200).json({ success: true, imageName: imageName });
+  } catch (error) {
+    console.error("EError upload:", error);
     return res.status(500).json({ error });
   }
 };

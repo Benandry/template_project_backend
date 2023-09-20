@@ -1,6 +1,7 @@
 import { Document } from "mongoose";
 
 export interface IUser extends Document {
+  imageUrl: string;
   first_name: string;
   last_name: string;
   username: string;
@@ -21,4 +22,5 @@ export interface IUserFormatted {
   gender: string;
   email: string;
   role: string;
+  imageUrl: string;
 }

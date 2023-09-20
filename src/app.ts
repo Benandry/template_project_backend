@@ -4,6 +4,7 @@ import connectDatabase from "./config/database";
 import userRoute from "./routes/userRoute";
 import dotenv from "dotenv";
 import routerSecurity from "./routes/securityRoute";
+import { staticUploads } from "./helpers/staticUpload";
 
 const app = express();
 app.use(cors());
@@ -17,8 +18,8 @@ const startServer = async () => {
     await connectDatabase(); // Appel de la fonction de connexion
     // ROUTES
     app.use("/user", userRoute); // Apell route user
+    app.use("/staticUploads", staticUploads); // Apell route security
     app.use("/", routerSecurity); // Apell route security
-
     app.listen(port, () => {
       console.log(`Server is running http://localhost:${port}`);
     });
